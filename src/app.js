@@ -21,4 +21,20 @@ app.use(express.static("public"))
 // we use cookies for to access the user browser cookies and set his cookies means(to perform crud operation on his cookies)
 app.use(cookieParser())
 
+// import routes
+import userRouter from "./routes/user.routes.js"
+
+//routes declaration 
+// we were using before app.get.... because we were writing routes and controller in same file but now we are exporting from other files so we ues app.use 
+// so new to bring router we have to do through middleware
+
+// it will work like http://localhost:8000/users/register 
+//the /register after the users/ comes from user.routes
+//we can write like this w app.use("/users",uerRouter) */
+//this is the most standardized  method also to tell api and its version
+
+app.use("/api/v1/users",userRouter)
+// it will work like http://localhost:8000/api/v1/users/register 
+
+
 export { app };

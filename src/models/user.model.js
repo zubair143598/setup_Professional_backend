@@ -51,7 +51,7 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 // we don't use arrow function here because arrow function does'nt have context we use normal function here, because we have to access the above models values because we have to manipulate values, so it is important we have access of the values. and we will use async because it is time taking process
-// next is the flag name like (res, req, error). It is middleware so next flag should be there. When the work is done in the we have to call the flag(next) the work is done now pass forward
+// "next" is the flag name like (res, req, error). It is middleware so next flag should be there. When the work is done in the we have to call the flag(next) the work is done now pass forward
 userSchema.pre("save", async function (next) {
   // we used the condition that the password is only change through bcrypt if password is change other wise no need to encrypt again again(like some time use change avatar etc then we have to prevent that password don't change again )
 

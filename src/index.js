@@ -2,11 +2,12 @@
 
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
-// import { app } from "./app.js";
+import { app } from "./app.js";
 
 dotenv.config({
   path:'.env'
 })
+
 
 //we use async await for connection and async technically return promise, 
 // so we can use .then and .catch because it is a promises 

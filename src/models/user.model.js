@@ -55,12 +55,10 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next) {
   // we used the condition that the password is only change through bcrypt if password is change other wise no need to encrypt again again(like some time use change avatar etc then we have to prevent that password don't change again )
 
-  if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-  } else {
-    next();
-  }
+  if (!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 
 //if we show the password to use to check it is correct or for any reason we will show his password like 1234 and in the database it is save in encrypted form
@@ -73,32 +71,34 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function () {
-  return jwt.sign({
-    //this method have access of over database so data will come from database
-    _id: this.id,
-    email: this.email,
-    userName: this.username,
-    fullName: this.fullName,
-  },
-  process.env.ACCESS_TOKEN_SECRET,
-  {
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-  }
-);
+  return jwt.sign(
+    {
+      //this method have access of over database so data will come from database
+      _id: this.id,
+      email: this.email,
+      userName: this.username,
+      fullName: this.fullName,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    }
+  );
 };
 userSchema.methods.generateRefreshToken = function () {
-    return jwt.sign({
-        //this method have access of over database so data will come from database
-        _id: this.id,
-        email: this.email,
-        userName: this.username,
-        fullName: this.fullName,
-      },
-      process.env.REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-      }
-    );
+  return jwt.sign(
+    {
+      //this method have access of over database so data will come from database
+      _id: this.id,
+      email: this.email,
+      userName: this.username,
+      fullName: this.fullName,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    }
+  );
 };
 
 export const User = mongoose.model("User", userSchema);
